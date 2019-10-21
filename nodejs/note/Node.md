@@ -11,7 +11,7 @@
       	* Node.js 不是库，不是框架
       * Node.js 是一个JavaScript 运行时环境(一个平台)
       	* 简而言之，Node.js可以解析和执行JavaScript代码
-   	* 以前只有浏览器可以解析执行JavaScript代码，现在的JavaScript可以完全脱离浏览器来运行，一切都归功于Node.js
+      	* 以前只有浏览器可以解析执行JavaScript代码，现在的JavaScript可以完全脱离浏览器来运行，一切都归功于Node.js
     * **浏览器中的JavaScript**
        * EcmaScript
          	* 基本的语法：
@@ -351,15 +351,21 @@
 
 
 
-## 3. Node中的JavaScript
+## 3.  Node中的JavaScript
 
- * EcmaScript
-   	* 没有DOM、BOM
-	* 核心模块
-	* 第三方模块
-	* 用户自定义模块
+
+
+* * EcmaScript
+      * 没有DOM、BOM
+* 核心模块
+* 第三方模块
+* 用户自定义模块
+
+
 
 #### 3.1 核心模块
+
+
 
 ​	Node为JavaScript提供了很多服务器级别的API，这写API绝大多数都被包装到了一个具名的核心模块中了。
 
@@ -395,7 +401,7 @@ nodejs.org
 	* exports
 
  * [js简单的模块化](js简单的模块化)
-    
+   
    ```JavaScript
    // a.js
    
@@ -462,14 +468,420 @@ require('./b.js')
           // x+y=40
           ```
 
-          
+
 
 #### 3.3 第三方模块
 
 
 
+### 4. Web服务器开发
+
+#### 4.1 IP地址和端口号
+
+	* IP地址用来定位计算机
+	* 端口号用来定位具体的应用程序
+
+* 所有需要联网通信的应用程序都会占用一个端口号
+* 端口号的范围从0 - 65535之间
+* 在计算机中有一些默认端口号，最好不要去使用
 
 
-### 4. Node中的模块系统
 
- 
+#### 4.2 响应内容类型
+
+
+
+* 关于中文乱码的问题，设置header头信息
+
+ * [http-encode.js](./code/http-encode.js)
+
+   ```JavaScript
+   var http = require('http')
+   
+   var server = http.createServer()
+   
+   server.on('request', function(req, res) {
+   	
+   	/*
+   	res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+   	
+   	res.write('hello world')
+   	// 在服务器默认发送的数据，是utf-8编码的内容
+   	// 浏览器会按照当前操作系统的默认编码（gbk）去解析，
+   	// 不知道接收到的数据是utf-8编码的内容
+   	// 解决方法就是将编码格式同时发送给浏览器
+   	// 内容类型， 普通文本；编码格式
+   	
+   	
+   	// res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+   	// Cannot set headers after they are sent to the client
+   	// 头信息设置要放在前面
+   	
+   	res.write('<br>你好，世界')
+   	res.write('\n 哈哈哈hhh')
+   	res.end('...')
+   	*/
+   	var url = req.url
+   	
+   	if (url === '/plain') {
+   		// text/plain 普通文本，简单的，不加修饰的
+   		res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+   		res.end('hello, world.<br> 你好，世界\nhhhhh哈哈哈')
+   	}else if(url === '/html') {
+   		// text/html html格式的文本
+   		res.setHeader('Content-Type', 'text/html; charset=utf-8')
+   		res.end('<h2> hello html <a href="#">点击</a></h2>')
+   	}
+   })
+   
+   server.listen(80, function() { //浏览器默认访问80端口，如果服务器上线，服务程序绑定80端口更方便访问
+   	console.log('server in running...')
+   })
+   
+   /*
+   	在http协议中，Content-Type用来设置内容类型
+   */
+   ```
+
+* 发送文件中的数据及Content-Type内容类型
+
+  * 在线查询工具：http://tool.oschina.net/commons
+  * 不同的文档对应的不同类型：.text--> text/plain; .html-->text/html;.jpg-->img/jpeg，其中，图片不需要指定编码，一般只为字符数据指定编码
+  * 结合fs核心模块将页面发送到浏览器
+
+* 在HTML中设置
+
+  * 除了Content-Tpye可以用来指定编码，也可以在HTML页面中通过meta元数据来声明当前文本的编码格式[index.html](./code/resource/index.html)
+    * `<meta charset='utf-8'>`
+
+* [http-fs.js](./code/http-fs.js)
+
+```JavaScript
+
+var http = require('http')
+var fs = require('fs')
+
+var server = http.createServer()
+
+server.on('request', function(req, res) {
+	// / index.html
+	var url = req.url
+	
+	if(url === '/') {
+		fs.readFile('./resource/index.html', function(err, data) { // 动态读取文件，修改index.html文件后不需要重启服务器
+			if(err) {
+				res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+				res.end('文件读取失败， 请稍后重试!')	
+			}else {
+				// data 默认是二进制数据，可以通过.toString 转换
+				// end支持两种数据类型，一种是二进制，一种是字符串，可以不转换
+				res.setHeader('Content-Type', 'text/html; charset=utf-8')
+				res.end(data)
+			}
+		})
+	}else if(url === '/wolf.jpg') {
+		// wolf.jpg只是一个标识不是文件路径，可以为任意变量
+		// wolf，sheep，jpg。。。。
+		fs.readFile('./resource/wolf.jpg', function(err, data) {
+			if(err) {
+				res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+				res.end('文件读取失败')
+			}else {
+				// 图片不需要指定编码，编码是字符编码，图片设定编码会出现问题
+				res.setHeader('Content-Type', 'image/jpeg;')
+				res.end(data)
+			}
+		})
+	}
+})
+
+server.listen(80, function() {
+	console.log('Server is running...')
+})
+```
+
+#### 1-4 总结
+
+
+
+- Node.js是什么
+
+  + JavaScript 运行时
+  + 既不是语言，也不是框架，它是一个平台
+
+- Node.js 中的JavaScript
+
+  - 没有BOM，DOM
+  - EcmaScript 基本的JavaScript部分
+  - 在Node中为JavaScript提供了一些服务器级别的API
+    - 文件操作能力
+    - http服务能力
+
+- Node中的JavaScript
+
+  - EcmaScript
+    - 变量，方法，数据类型，内置对象，Array，Object，Date， Math
+  - Node中的模块系统
+    - 在Node中没有全局作用域的概念
+    - 在Node中只能通过require方法来加载执行多个JavaScript文件
+    - require加载只能是执行其中的代码，文件与文件之间由于模块作用域，所以没有污染的问题
+      - 模块是完全封闭的
+      - 外部无法访问内部
+      - 内部无法访问外部
+    - 模块作用域：
+      - 可以加载执行多个文件，可以完全避免变量命名冲突污染的问题
+      - 某些情况下的模块与模块之间的通信，可以通过`exports`完成
+        - 每个模块中，都提供了一个对象`exports`
+        - `exports`默认是要给空对象{}
+        - 需要被外部访问使用的成员手动挂载到`exports`接口对象中
+        - 在外部使用的时候`require`指定模块，就可以拿到挂载到`exports`接口对象中的成员
+        - 其它规则和使用见后
+  - 核心模块
+    - 核心模块是由Node提供了一个个的具名的模块，它们都有自己特殊的名称标识
+      - fs 文件操作模块
+      - http 网络服务构建模块
+      - os 操作i系统信息模块
+      - path 路径处理模块
+    - 所有核心模块在使用的时候都必须手动的使用`require`方法来加载
+      - 例如：`var fs = require('fs')`
+
+- http
+
+  - 端口号
+    - 端口号定位具体的应用程序
+  - ip定位计算机
+  - Content-Type
+    - 服务器通过头信息设置每次响应的数据类型
+    - 不同的资源对应的Content-Type不同
+    - 文本类型的数据， 加上编码格式
+  - 通过网络发送文件
+    - 本质上发送的不是文件，而是文件的内容
+    - 浏览器会根据Content-Type解析响应数据
+
+- 代码风格及代码中的分号问题
+
+  - ```javascript
+    var foo = 'bar'
+    var foo='bar'
+    var foo= 'bar'
+    var foo ='bar'
+    
+    if (true) {
+        console.log('hello')
+    }
+    ```
+
+  - 社区诞生的一些比较规范的代码风格
+
+    - [JavaScript Standard Style](https://standardjs.com/)
+    - [Airbnb JavaScript Style]
+
+  - ```javascript
+    function say() {
+        console.log('hello world')
+    }
+    say()
+    
+    ;(function() {
+        console.log('hello')
+    })() //匿名函数不执行
+    //匿名函数前面如果没有分号，程序会报错
+    
+    ;['苹果', '香蕉'].forEach(function (item) {
+        console.log(item)
+    })
+    
+    // ` 反引号是EcmaScript 6中新增的一种字符串包裹形式，叫做：模板字符串
+    // 它支持换行和非常方便拼接变量
+    var foo = `bar
+    	大家好
+    	hello 				就是这么突出
+    	world`
+    console.log(foo)
+    
+    
+    ;`hello`.toString()	//前面的；很重要
+    ```
+
+  - 当采用无分号的代码风格的时候，只需要注意一下情况就可以了：
+
+    - 当一行代码是以`(`, `[`,  ` 开头的时候，则在前面补上一个分号，避免一些语法解析错误 
+    - 有些人也会使用! , ~, &代替；放到一行代码前面
+
+- 一个案例apache
+
+  - [apache-v1/http-helloworld.js](./code/apache-v1)
+
+  - ```javascript
+    var http = require('http')
+    var fs = require('fs')
+    
+    
+    // 1. 创建Server
+    var server = http.createServer()
+    
+    // 2. 监听Server的request请求事件，兵设置请求处理函数
+    // 		一个请求对应一个响应，如果在一个请求的过程中，已经结束响应了，则不能重复
+    //		发送响应。没有请求就没有响应。
+    //	Apache 服务器软件，默认有一个www目录，所有存放在www目录下的资源
+    //	都可以通过网址来浏览
+    //	127.0.0.1:80/a.txt
+    
+    // 为了方便可以设置一个变量存放服路径
+    // var wwwDir = 'C://hello/app'
+    // fs.readFile(wwwDir+'/apple/login.html'), function(err, data){})
+    
+    
+    // 再进一步
+    // 由访问url
+    // /--> /index.html
+    // /index --> /index.html
+    // /apple/login --> /apple/login.html
+    // /image/abc.jpg --> /image/abc.jpg
+    
+    server.on('request', function(req, res) {
+    	
+    	var url = req.url
+    	if(url === '/') {
+    		fs.readFile('../app/index.html', function(err, data) {
+    			if(err) {
+    				res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+    				// return 有两个作用：
+    				// 1. 方法返回值
+    				// 2. 阻止代码继续向后执行
+    				return res.end('404 Not Found.')
+    			}
+    			res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    			res.end(data)			
+    		})
+    	}else if(url === '/txt-a') {
+    		fs.readFile('../app/a.txt', function(err, data) {
+    			if(err) {
+    				res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+    				return res.end('404 Not Found.')
+    			}
+    			// res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    			// 设置后就乱码了
+    			res.end(data)			
+    		})
+    	}else if(url === '/login') {
+    		fs.readFile('../app/apple/login.html', function(err, data) {
+    			if(err) {
+    				res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+    				return res.end('404 Not Found.')
+    			}
+    			res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    			res.end(data)			
+    		})
+    	}else if(url === '/index') {
+    		fs.readFile('../app/index.html', function(err, data) {
+    			if(err) {
+    				res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+    				return res.end('404 Not Found.')
+    			}
+    			res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    			res.end(data)			
+    		})
+    	}
+    	
+    	
+    })
+    // 3. 绑定端口号， 启动服务
+    server.listen(3000, function() {
+    	console.log('server running...')
+    })
+    ```
+
+  - [apachev1.1/http-helloworld1.js](./code/apache-v1)
+
+  - ```javascript
+    var http = require('http')
+    var fs = require('fs')
+    
+    
+    // 1. 创建Server
+    var server = http.createServer()
+    
+    // 2. 监听Server的request请求事件，兵设置请求处理函数
+    
+    // 再进一步
+    // 由访问url
+    // /--> /index.html
+    // /index --> /index.html
+    // /apple/login --> /apple/login.html
+    // /image/abc.jpg --> /image/abc.jpg
+    
+    server.on('request', function(req, res) {
+    	
+    	var wwwDir = 'F:/learn/github/learn/nodejs/note/code/app'
+    	var url = req.url
+    	var filePath = '/index.html'
+    	
+    	if(url !== '/') {
+    		filePath = url
+    		
+    	}
+    	
+    	fs.readFile(wwwDir + filePath, function(err, data) {
+    	if(err) {
+    		return res.end('404 not found')
+    	}
+    	res.end(data)
+    })
+    	//console.log(filePath, wwwDir + filePath)
+    })
+    
+    // 3. 绑定端口号， 启动服务
+    server.listen(3000, function() {
+    	console.log('server running...')
+    })
+    ```
+
+    
+
+
+
+
+
+#### 4.3 请求对象Request
+
+
+
+#### 4.4 响应对象Response
+
+
+
+#### 4.5 在Node中使用模板引擎
+
+
+
+#### 4.6 同意处理静态资源
+
+
+
+#### 4.7 服务端渲染
+
+
+
+### 5 留言本
+
+### 6 Node中的模块系统
+
+
+
+
+
+
+
+## 接下来
+
+* 模块系统
+* Node中的其它核心模块
+* 做一个小管理系统
+  * CRUD(create read update delete)
+* Express Web开发框架
+
+
+
+
+
