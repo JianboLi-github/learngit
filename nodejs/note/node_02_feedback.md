@@ -45,4 +45,25 @@
      为了方便的同意处理这些静态资源，约定把所有的静态资源放在public目录中。而通过浏览器进行访问资源的时候就可以写为：/public/xxx/lib/something.css
 
      在设置服务器的时候首先可以设置为对任何请求都不进行处理，然后在慢慢增加请求处理，填充功能。
+   
+   
+   
+4. 处理表单get请求
 
+5. 表单重定向-服务端重定向
+
+   总结：
+
+   feedback留言本可以分解为：
+
+   - `/` --> index.html
+   - 开放public目录中的静态资源
+     - 当/public/xxx的时候，读取响应public目录中的举起资源
+   - /post -->post.html
+   - /pinglun 
+     - 接收表单提交数据
+     -  存储表单提交的数据
+     - 让表单重定向到 `/`
+       - statusCode
+       - setHeader
+       - 
