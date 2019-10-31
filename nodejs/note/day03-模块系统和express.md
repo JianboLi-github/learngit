@@ -202,6 +202,129 @@ module.exports = function() {
 
   - 所以，当导出单个成员的时候，需要修改对象`module.exports`，而不是修改`module.exports`的引用`exports`。
 
-  - 导出单个成员的时候修改`exports`就会出错，注意模块内最后一条语句`return module.exports`
+  - 导出单个成员的时候修改`exports`就会出错，注意模块内最后一条语句`return module.exports`，只有当exports是module.exports的引用的时候，对exports对象的修改才会被外部模块感知
 
-- 
+  - ```javascript
+    //foo.js
+    
+    exports.foo = 'bar'
+    // 外部模块可访问到：{foo: bar}
+    module.exports.a = 123
+    // {foo: bar, a:123}
+    
+    exports = {
+        a:456
+    }
+    // 此时，exports ！== module.exports
+    // exports变为一个对象，不再是引用，exports对象的成员不可被外部访问到
+    
+    module.exports.foo = 'haha'
+    // {foo:'haha', a:123}
+    exports.c = 456
+    // exports对象增加成员c，同样不可被外部访问到
+    exports = module.exports
+    // 重新建立module.exports引用的关系
+    exports.a = 789
+    // {foo: 'haha', a: 789}
+    // 导出的对象成员a值被修改
+    
+    module.exports = function() {
+        console.log('一锤定江山')
+    }
+    // 导出的对象重新赋值，无论前面怎么变换，最终得到是function
+    ```
+
+  - 实际开发使用的时候不会那么复杂
+
+  - ```javascript
+    // 导出多个成员：
+    exports.xxx = xxx
+    //或者
+    module.exports = {
+        xxx: xxx
+    }
+    // 导出单个成员:
+    module.exports = xxx
+    ```
+
+
+#### 6.2.4 require 方法加载规则
+
+- 核心模块
+
+  - 模块名
+
+- 第三方魔魁啊
+
+  - 模块名
+
+- 自定义模块
+
+  - 路径
+
+- 优先从缓存加载
+
+  - 由于在a中已经加载过b，所以main不会重复加载，main可以拿到其中的接口对象，但是不会执行b里面的代码
+  - 目的是避免重复模块加载，提高模块加载效率
+
+- 判断模块标识
+
+  - 核心模块
+  - 第三方模块
+  - 自定义模块
+
+  路径形式的模块：
+
+  ```javascript
+  // ./   当前目录，是不可省略的
+  // ../
+  // /xxx
+  // 	在这里的 / 表示的是当前文件模块所属磁盘的根路径
+  // d:/a/foo.js 几乎不用绝对路径
+  // .js可以省略
+  ```
+
+- 核心模块
+
+  - 核心模块的本质也是文件
+  - 核心模块文件已经被编译到了二进制文件中了，使用时可以按照名字直接加载
+
+- 第三方模块(art-template)
+
+  - 使用的时候可以通过require('包名')的方式进行加载才可以使用
+
+  - 第三方包不可能和核心包的名字是一样的
+
+  - 既不是核心模块，也不是路径形式的模块
+
+    1. 首先会找当前文件所处目录的node_modules目录
+
+    2. 然后，查找node_modules/art-template/package.json文件
+
+    3. 接下来查找package.json文件中的main属性
+    4. main属性中就记录了art-template模块的入口模块
+    5. 如果package.json文件不存在或者main指定的入口模块不存在，则node 会默认查找该目录下的index.js
+    6. 如果当前目录下不存在node_modules(上述条件不成立),则会进入上一级node_modules目录查找
+    7. 如此逐级向上查找，直到当前磁盘根目录。如果不存在，最后报错：`can not find module xxx`
+
+  - 一个项目有且只有一个node_modules,放在项目根目录中，这样项目中的所有的子目录中的代码都可以加载到第三方包。不会出现多个node_modules
+
+- 所以，模块查找机制：
+
+  - 优先从缓存加载
+  -  核心模块
+  - 路径形式的文件模块
+  - 第三方模块
+
+​	
+
+### 6.3 npm
+
+- node package manager
+- package.json 包说明文件
+  - 初始值为一个空对象`{}`
+  - `npm install art-template --save`安装第三方报的时候添加参数save就会向包说明文件中添加依赖项信息（--save可以放前放后都可以）
+  - 这个文件可以通过`npm init`初始化生成
+  - `npm install` 可以根据包说明文件安装项目所有的依赖项dependencies
+
+### 6.4 package.json
