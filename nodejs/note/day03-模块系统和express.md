@@ -142,7 +142,7 @@ var 自定义变量名称 = require('模块')
   - 执行被加载模块中的代码
   - 得到被加载模块中的`exports`导出接口对象
 
-#### 6.2.1 导出`exports`
+#### 6.2.2 导出`exports`
 
 - Node中是模块作用，默认文件中所有的成员只在当前文件中有效
 
@@ -172,5 +172,36 @@ module.exports = function() {
 // exports = function(){}
 ```
 
+#### 6.2.3 exports和module.exports 解析
 
+- 原理：
 
+  - 在node中，每个模块内部都有一个自己的module对象
+
+  - module对象中，有一个成员：exports对象（默认为空）,代码最后return module.exports
+
+  - ```javascript
+    // var module = {
+    //     exports: {}
+    // }
+    
+    module.exports.foo = 'bar'
+    module.exports.add = function(x,y) {
+        return x + y
+    }
+    
+    
+    
+    // 默认在代码的最有有一句
+    return module.exports
+    ```
+
+  - 每次导出接口成员的时候都通过`module.exports = xxx`为了简化，node专门提供了一个变量`exports = module.exports `,也就是说在模块中还有`var exports = module.exports`。exports ===module.exports
+
+  - `exports` 是`module.exports的一个引用`
+
+  - 所以，当导出单个成员的时候，需要修改对象`module.exports`，而不是修改`module.exports`的引用`exports`。
+
+  - 导出单个成员的时候修改`exports`就会出错，注意模块内最后一条语句`return module.exports`
+
+- 
