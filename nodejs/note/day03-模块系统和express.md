@@ -327,4 +327,83 @@ module.exports = function() {
   - 这个文件可以通过`npm init`初始化生成
   - `npm install` 可以根据包说明文件安装项目所有的依赖项dependencies
 
+##### 6.3.1 npm网站
+
+- npmjs.com
+
+##### 6.3.2 npm命令行工具
+
+- npm是一个命令行工具，只要安装了node就已经安装了npm
+- npm有版本的概念：`npm --version`
+- 升级`npm install --global npm`
+
+##### 6.3.3 常用命令
+
+- npm init
+  - npm init -y 可以跳过向导，快速生成[--yes]
+- npm install
+  - 一次性把dependencies选项中的依赖项全部安装
+  - 简写：`npm i`
+- npm install  包名
+  - 只下载
+  - 简写：`npm i 包名`
+- npm install --save 包名
+  - 下载并保存依赖项（package.json文件中的dependencies选项）
+  - 简写：`npm i -S 包名`
+- npm uninstall 包名
+  - 只删除， 依赖项依然保存
+  - 简写`npm un 包名`
+- npm uninstall --save 包名
+  - 删除的同时也删除依赖项
+- npm help
+  - 查看使用帮助
+- npm 命令 --help
+  - 查看指定命令的使用帮助
+
+##### 6.3.4 解决npm被墙问题
+
+​	npm存储文件的服务器在国外，有时候会被墙，速度很慢
+
+- http://npm.taobao.org 淘宝npm镜像（cnpm）
+
+- 安装淘宝的cnpm
+
+  - `npm install --global cnpm`
+
+    ```shell
+    # npm install jquery
+    # 安装cnpm后，使用淘宝镜像下载jquery
+    cnpm install jquery
+    
+    ```
+
+- 直接使用淘宝镜像，免安装cnpm
+
+```shell
+npm install jquery --registry=https://registry.npm.taobao.org
+```
+
+- 也可以修改包服务器地址
+
+- ```shell
+  npm config set registry https://registry.npm.taobao.org
+  # 查看npm配置信息
+  npm config list
+  ```
+
+- 配置完后，`npm install `都会默认通过淘宝的服务器来来下载
+
 ### 6.4 package.json
+
+
+
+### 7. Express
+
+​	原生的http在某些方面表现不足以应对开发需求，所以使用框架来加快开发效率，框架的目的就是提高效率，让代码更高度同意。
+
+​	在Node中，有很多的web框架，这里以express为主。
+
+- expressjs.com
+
+
+
