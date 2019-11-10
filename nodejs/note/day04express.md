@@ -291,4 +291,118 @@ app.post('/post'， function(req, res) {
     })
     ```
 
-  - 
+
+### 4. crud设计路由
+
+- crud起步-从文件中读取数据
+
+- 模板处理
+
+- ```javascript
+  // app.js
+  
+  var express = require('express')
+  var fs = require('fs')
+  
+  var app = express()
+  
+  app.use('/node_modules/', express.static('./node_modules/'))
+  app.use('/public/', express.static('./public/'))
+  
+  app.engine('html', require('express-art-template'))
+  
+  app.get('/', function(req, res) {
+  	// res.send('hello world')
+  	/*
+  	res.render('index.html', {
+  		fruits: [
+  			'苹果',
+  			'香蕉',
+  			'句子'
+  		]
+  	})
+  	
+  	*/
+  	// readFile第二个参数时可选的，传入utf-8，以utf-8编码格式读取文件
+  	// 也可以data.toString()的方式
+  	fs.readFile('./db.json', 'utf-8', function(err, data) {
+  		if(err) {
+  			return res.status(500).send("Server error")
+  		}
+  		// 此时data是一个字符串
+  		console.log(data)
+  		
+  		// 解析字符串，访问成员students
+  		var students = JSON.parse(data).students
+  		
+  		res.render('index.html', {
+  			
+  			fruits: [
+  				'苹果',
+  				'香蕉',
+  				'句子'
+  			],
+  			students: students
+  		})
+  		
+  	})
+  })
+  
+  app.listen(3000, function() {
+  	console.log('running 3000')
+  })
+  ```
+
+- [index.html](./code/day04/crud-express/views/index.html)
+
+- db.json
+
+- ```json
+  {
+  	"students": [
+  		{"id": 1, "name": "张三", "gender": 0, "age": 18, "hobbies": "吃饭、睡觉、。。。"},
+  		{"id": 2, "name": "里斯", "gender": 0, "age": 12, "hobbies": "吃饭、睡觉、。。。"},
+  		{"id": 3, "name": "张三", "gender": 1, "age": 13, "hobbies": "吃饭、睡觉、。。。"},
+  		{"id": 4, "name": "张三", "gender": 0, "age": 14, "hobbies": "吃饭、睡觉、。。。"},
+  		{"id": 5, "name": "张三", "gender": 1, "age": 15, "hobbies": "吃饭、睡觉、。。。"}
+  	]
+  }
+  ```
+
+  #### 4.1 路由设计
+
+  - | 请求方法 | 请求路径         | get参数 | post 参数                      | 备注             |
+    | -------- | ---------------- | ------- | ------------------------------ | ---------------- |
+    | GET      | /students        |         |                                | 渲染首页         |
+    | GET      | /students/new    |         |                                | 渲染添加学生页面 |
+    | POST     | /students/new    |         | name、age、gender、hobbies     | 处理添加学生请求 |
+    | GET      | /students/edit   | id      |                                | 渲染编辑页面     |
+    | POST     | /students/edit   |         | id、age、name、gender、hobbies | 编辑请求         |
+    | GET      | /students/delete | id      |                                | 处理删除请求     |
+
+#### 4.2  回调函数的封装
+
+- 如果需要获取一个函数中，一个异步操作的结果，则必须通过回调函数来获取
+
+- 封装异步api
+
+  - ```javascript
+    function fn(callback) {
+        // var callback = function(data) {console.log(data)}
+        setTimeout(function() {
+            var data = 'hello'
+            callback(data)
+        }, 1000)
+    }
+    
+    fn(function(data) {
+        console.log(data)
+    })
+    ```
+
+  - 回调函数的目的就是获取异步操作的结果
+
+  - **`封装异步api是非常重要的一部分，不仅仅实在node中`**
+
+  - 不同之处：上层定义，下层调用
+
