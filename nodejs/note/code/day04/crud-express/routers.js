@@ -135,9 +135,34 @@ router.get('/students/edit', function(req, res) {
 	
 })
 
-router.post('/students/edit', function(req, res) {})
+router.post('/students/edit', function(req, res) {
+	// 1. 获取表单数据
+	// 		req.body
+	// 2. 更新
+	// 		Student.update()
+	// 3. 发送响应
+	console.log(req.body)
+	Student.updateById(req.body, function(err) {
+		if(err) {
+			return res.status(500).send('server error')
+		}
+		res.redirect('/students')
+	})
+	
+})
 
-router.get('/students/delete', function(req, res) {})	
+router.get('/students/delete', function(req, res) {
+	// 1. 获取要删除的id
+	// 2. 根据id执行删除操作
+	// 3. 根据操作结果发送响应数据
+	console.log(req.query.id)
+	Student.deleteById(req.query.id, function(err) {
+		if(err) {
+			return res.status(500).send('server error')
+		}
+		res.redirect('/students')
+	})
+})	
 
 // 3. 把router导出
 module.exports= router

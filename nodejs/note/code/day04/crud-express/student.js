@@ -43,8 +43,9 @@ exports.findById = function(id, callback) {
 			return callback(err)
 		}
 		var students = JSON.parse(data).students
+		
 		var result = students.find(function(item) {
-			return item.id === id
+			return item.id === parseInt(id)
 		})
 		callback(null, result)
 	})
@@ -67,7 +68,7 @@ exports.save = function(student, callback) {
 		
 		
 		
-		// 把独享数据转换成字符串
+		// 把对象数据转换成字符串
 		var fileData = JSON.stringify({ //注意此处json文件保存的格式`{对象}`
 			students: students
 		})
@@ -104,6 +105,12 @@ exports.updateById = function(student, callback) {
 			return callback(err)
 		}
 		var students = JSON.parse(data).students
+		
+		// 这里需要把id统一转换为数字类型
+		// 否则保存的时候会保存为字符串
+		// 出现‘RuntimeError: Cannot read property 'id' of undefined’错误
+		student.id = parseInt(student.id)
+		
 		// 使用EcmaScript 6 的一个数组方法：find
 		// 需要接收一个函数作为参数
 		// 当某个遍历项符合item.id ===student.id条件的时候
@@ -145,6 +152,30 @@ exports.updateById = function(student, callback) {
 /**
 	删除学生
 */
-exports.delte = function() {
-	
+exports.deleteById = function(id, callback) {
+	fs.readFile(dbPath, 'utf-8', function(err, data) {
+		if(err) {
+			return callback(err)
+		}
+		var students = JSON.parse(data).students
+		// findIndex方法专门用来根据条件查找元素的下表
+		var deleteId = students.findIndex(function(item) {
+			return item.id === parseInt(id)
+		})
+		// splice方法删除给定下标的元素
+		students.splice(deleteId, 1)
+		
+		// 把对象数据转换成字符串
+		var fileData = JSON.stringify({ //注意此处json文件保存的格式`{对象}`
+			students: students
+		})
+		
+		// 把字符串保存到文件中
+		fs.writeFile(dbPath, fileData, function(err) {
+			if(err) {
+				return callback(err)
+			}
+			callback(null)
+		})
+	})
 }

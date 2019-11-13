@@ -84,7 +84,8 @@
           </div>
 
           <h2 class="sub-header">编辑学生</h2>
-		  <form action='/students/new' method='post'>
+		  <form action='/students/edit' method='post'>
+				<input type='hidden' value='{{ student.id }}' name='id'>
 			  <div class="form-group">
 				<label for="">姓名</label>
 				<input type="text" name='name' class="form-control" id="exampleInputEmail1" placeholder="" value='{{ student.name }}'>
