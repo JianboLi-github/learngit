@@ -4,6 +4,8 @@
 ## 如何高效入门数据科学
     ** 简书王树义（想法和方法）
     ** https://www.jianshu.com/p/85f4624485b9
-
+    
     ** 一个很有意思的网站
     ** https://bathur.cn/archive/
+    ** 开发者网站 
+    ** mdn

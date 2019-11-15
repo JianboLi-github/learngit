@@ -79,6 +79,49 @@ add(10, 20, function(result) {
 
 JavaScript 编程对的一大特色：异步编程。
 
+- setTimeout
+- readFile/writeFile/readdir
+- ajax
 
+### 1. 封装ajax
 
-封装ajax
+```html
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <title>封装ajax方法</title>
+  
+  <script>
+    function get(url, callback) {
+        var oReq = new XMLHttpRequest()
+        // 当请求加载成功之后要调用指定的函数
+        oReq.onload = function() {
+            // 现在需要在这里得到oReq.ressponseText
+            console.log(oReq.responseText)
+            callback(oReq.responseText)
+        }
+        oReq.open('get', url, true)
+        oReq.send()
+    }
+    // 封装ajax方法，调用get方法，
+    // get(url, function(data) {
+    // })
+    
+    
+    get('data.json', function(data) {
+        console.log('heizhu')
+        console.log(data)
+    })
+  </script>
+</head>
+<body>
+ 
+</body>
+</html>
+```
+
+### 2. 关于JavaScript模块化问题
+
+- JavaScript不支持模块化
+
