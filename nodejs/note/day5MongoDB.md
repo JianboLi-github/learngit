@@ -123,5 +123,37 @@ JavaScript 编程对的一大特色：异步编程。
 
 ### 2. 关于JavaScript模块化问题
 
-- JavaScript不支持模块化
+- JavaScript不支持模块化，像
 
+  - require
+  - exports
+
+  都是在node中才有的，node环境对JavaScript进行了特殊的模块化支持CommonJS
+
+- 在浏览器中也可以像在Node中的模块一样进行编程，但是需要第三方库
+
+  - require.js  术语：AMD
+  - sea.js  CMD
+
+  都可以实现
+
+- 无论是CommonJS、AMD、CMD、UMD、EcmaScript 6 Modules官方规范都是为了解决JavaScript的模块化问题
+
+  - 其中EcmaScript是官方定义。
+  - EcmaScript在2015年发布了EcmapScript 2016 官方标准，其中就包含了官方对JavaScript模块化的支持，但是很多JavaScript运行环境还不支持
+  - Node在8.5版本后才对EcmaScript 6 module进行了支持
+  - 可以使用预编译器将EcmaScript 6 ---> EcmaScript 5
+  - 目前的前端情况都是使用很多新技术，然后利用编译器工具打包运行在低版本浏览器中
+  - 使用新技术是为了提高效率，增加可维护性
+
+- app.use不仅仅是用来开放静态资源的，还可以做很多工作，配置body-parser也是通过app.use来配置的，这里涉及到中间件的一套规则
+
+
+
+- package.json 和package-lock.json
+  - 在npm5之前不会有package-lock.json这个文件的
+  - npm5 之后的版本 安装包不需要加--save参数，它会自动保存依赖信息
+  - 当安装报的时候，会自动出创建或者更新pack-lock.json文件
+  - `package-lock.json`文件会保存node_modules中所有包的信息（版本、下载地址）这样重新按装的时候`npm install` 速度就会可以提升
+  - 这个文件也可以锁定依赖包的版本，防止项目依赖包自动上级到最新版本
+  - 
