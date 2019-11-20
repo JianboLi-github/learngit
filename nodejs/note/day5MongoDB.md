@@ -343,9 +343,9 @@ people
 
 
 
-#### 3.4.3 官方指南
+#### 3.5 官方指南
 
-[官方示例](/code/day05/mongoose-demo/demo2.js)
+#### 3.5.1 [设计Schema发布Modle](/code/day05/mongoose-demo/demo2.js)
 
 ```javascript
 var mongoose = require('mongoose')
@@ -381,7 +381,64 @@ var blog = mongoose.model('Blog', blogSchema)
 // 4. 当有了模型函数后，就可以使用这个构造函数对users集合操作了。
 ```
 
+#### 3.5.2 增加数据
 
+```javascript
+var oneBlog = new Blog({
+    title: 'hello world',
+    author: 'zhangsan',
+    body: 'nothing is possible。',
+    comments: {no:1}
+})
+oneBlog.save(function(err, result) {
+    if(err) {
+        console.log('保存失败')
+    }else {
+        console.log('保存成功')
+        console.log(result)
+    }
+})
+```
+
+
+
+#### 3.5.3 查询
+
+```javascript
+
+// 查询所有数据，返回一个数组
+Blog.find(function(err, result){
+    if(err) {
+        console.log('查询失败')
+    }else {
+        console.log(result)
+    }
+})
+
+// 按条件查询数据，返回一个数组
+Blog.find({
+    title: 'lisi'
+},function(err, result){
+    if(err) {
+        console.log('查询失败')
+    }else {
+        console.log(result)
+    }
+})
+
+// 按条件查询单个数据，**返回一个对象**
+// 无条件，返回第一条数据
+Blog.findOne({
+    title: 'lisi',
+    author: 'zhangsan'  //复合查询
+},function(err, result){
+    if(err) {
+        console.log('查询失败')
+    }else {
+        console.log(result)
+    }
+})
+```
 
 
 

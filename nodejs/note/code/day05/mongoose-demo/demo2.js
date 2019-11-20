@@ -26,6 +26,59 @@ var blogSchema = new Schema({
 //          例如这里User最终会变成users集合名称
 //      第二个参数：架构
 //      return: 模型构造函数
-var blog = mongoose.model('Blog', blogSchema)
+var Blog = mongoose.model('Blog', blogSchema)
 
 // 4. 当有了模型函数后，就可以使用这个构造函数对users集合操作了。
+
+// 增加数据
+var oneBlog = new Blog({
+    title: 'lisi',
+    author: 'zhangsan',
+    body: 'nothing is possible。',
+    comments: {no:1}
+})
+
+/*
+oneBlog.save(function(err, result) {
+    if(err) {
+        console.log('保存失败')
+    }else {
+        console.log('保存成功')
+        // console.log(result)
+    }
+})
+*/
+
+
+// 查询所有数据，返回一个数组
+Blog.find(function(err, result){
+    if(err) {
+        console.log('查询失败')
+    }else {
+        console.log(result)
+    }
+})
+
+// 按条件查询数据，返回一个数组
+Blog.find({
+    title: 'lisi'
+},function(err, result){
+    if(err) {
+        console.log('查询失败')
+    }else {
+        console.log(result)
+    }
+})
+
+// 按条件查询一条数据，**返回一个对象**
+// 无条件，返回第一条数据
+Blog.findOne({
+    title: 'lisi',
+    author: 'zhangsan'  //复合查询
+},function(err, result){
+    if(err) {
+        console.log('查询失败')
+    }else {
+        console.log(result)
+    }
+})
