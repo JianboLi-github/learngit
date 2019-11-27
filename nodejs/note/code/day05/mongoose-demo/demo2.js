@@ -82,3 +82,33 @@ Blog.findOne({
         console.log(result)
     }
 })
+
+
+/*
+// 删除数据
+Blog.remove({
+    title: 'lisi'
+}, function(err, result) {
+    if(err) {
+        console.log('删除失败')
+    }else{
+        console.log(resutl)
+    }
+})
+
+
+*/
+
+
+// 更新数据
+Blog.findByIdAndUpdate('5dddebf765e7583fc81014dd', {
+    author: 'wangwang'
+},function(err, result){
+    if(err) {
+        console.log('更新失败')
+        
+    }else {
+        console.log('更新成功')
+        console.log(result)
+    }
+})

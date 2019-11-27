@@ -442,3 +442,68 @@ Blog.findOne({
 
 
 
+#### 3.5.4 删除
+
+- 根据条件删除出所有
+
+```javascript
+// 删除数据
+Blog.remove({
+    title: 'lisi'
+}, function(err, result) {
+    if(err) {
+        console.log('删除失败')
+    }else{
+        console.log(resutl)
+    }
+})
+
+```
+
+- 根据条件删除一个
+
+  - ```javascript
+    Model.findOneAndRemove(conditionss, [options], [callback])
+    ```
+
+- 根据id删除一个
+
+  - ```javascript
+    Model.findByIdAndRemove(id, [options], [callback])
+    ```
+
+  - 
+
+#### 3.5.5 更新
+
+- 根据id更新一个
+
+```javascript
+// 更新数据
+Blog.findByIdAndUpdate('5dddebf765e7583fc81014dd', {
+    author: 'wangwang'
+},function(err, result){
+    if(err) {
+        console.log('更新失败')
+        
+    }else {
+        console.log('更新成功')
+        console.log(result)
+    }
+})
+```
+
+- 根据指定条件更新所有
+
+  
+
+	- ```javascript
+    Model.update(conditions, doc, [options], [callback])
+    ```
+
+- 根据指定条件更新一个
+  - ```javascript
+    Model.findOneAndUpdate([conditions], [update], [options], [callback])
+    ```
+
+    
