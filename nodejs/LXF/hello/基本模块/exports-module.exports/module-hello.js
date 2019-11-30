@@ -1,4 +1,5 @@
 console.log('hello world')
+var name = '模块'
 var module = {
     id: 'hello',
     exports:{}
