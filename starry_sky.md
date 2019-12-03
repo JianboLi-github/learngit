@@ -5,7 +5,7 @@
     ** 简书王树义（想法和方法）
     ** https://www.jianshu.com/p/85f4624485b9
     
-    ** 一个很有意思的网站
+    ** 一个很有意思的网站， kms分享
     ** https://bathur.cn/archive/
     ** 开发者网站 
     ** mdn
