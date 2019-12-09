@@ -30,8 +30,18 @@ router.get('/', async(ctx, next) => {
     `
 })
 
-router.post('/sigin', async(ctx, next) => {
-    
+router.post('/signin', async(ctx, next) => {
+    var 
+        name = ctx.request.body.name || "",
+        password = ctx.request.body.password || ""
+
+    console.log(`signin with name: ${name}, password:${password}`)
+    if(name === 'koa' && password === '12345') {
+        ctx.response.body = `<h1> Welcome, ${name}!</h1>`
+    }else {
+        ctx.response.body = `<h1>Login  failed!</h1>
+        <p><a href='/'> Try agin</a></p>`
+    }
 })
 
 //koa-bodyparser必须在 router之前
