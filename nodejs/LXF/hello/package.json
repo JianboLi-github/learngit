@@ -15,7 +15,9 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "mime": "^2.4.4",
+    "mocha": "^6.2.2",
     "mz": "^2.7.0",
-    "nunjucks": "^3.2.0"
+    "nunjucks": "^3.2.0",
+    "ws": "^7.2.0"
   }
 }

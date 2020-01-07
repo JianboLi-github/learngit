@@ -9,8 +9,76 @@ import sys
 import random
 import calendar 
 import datetime
+import time
 
 
+
+
+# 实现秒表
+print('`enter`开始计时，ctrl+c停止计时')
+while True:
+    try:
+        input()
+        starttime = time.time()
+        print('开始')
+        while True:
+            print('计时：', round(time.time() - starttime(), 0), '秒', end='\r')
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print('结束')
+        endtime = time.time()
+        print('总共的时间为：', round(endtime - starttime, 2), 'secs')
+        break        
+
+
+
+# 五人分鱼
+def fishes():
+    fish =1
+    while True:
+        total, enough = fish, True
+        for _ in range(5):
+            if (total - 1 ) % 5 == 0:
+                total = (total - 1) // 5 * 4
+            else:
+                enough = False
+                break
+        if enough:
+            print('总共有{}条鱼'.format(fish))
+            break
+        fish += 1
+fishes()
+sys.exit()
+
+
+# 约瑟夫死亡游戏
+# 30人需要15人船。排成一队，第9个人下船直到剩余15人
+people = {}
+for x in range(1, 31):
+    people[x] = 1
+check = 0
+i,j = 1, 0
+while i <= 31:
+    if i == 31:
+        i = 1
+    elif j == 15:
+        break
+    else:
+        if people[i] == 0:
+            i += 1
+            continue
+        else:
+
+            check += 1
+            if check == 9:
+                people[i] = 0
+                check = 0
+                print('{}号选手下海了'.format(i))
+                j += 1
+            else:
+                i += 1
+                continue
+sys.exit()
 
 # 获取昨天日期， 引入datetime模块
 def getYesterday():
