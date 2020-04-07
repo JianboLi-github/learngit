@@ -3,7 +3,7 @@
 
 ##
     ** Java 学习网站
-    ** https://how2j.cn/?p=50613
+    ** https://how2j.cn
 
     ** 简书王树义（想法和方法）
     ** https://www.jianshu.com/p/85f4624485b9
