@@ -2,6 +2,9 @@
     世界上有两件东西能震撼人们的心灵：一件是我们心中崇高的道德标准；另一件是我们头顶上灿烂的星空。当我看到有意思的文章后感觉兴奋就像再沙滩上捡到了一块美丽的贝壳，我告诉自己要把它收藏起来。
 
 ##
+    **https://www.cnblogs.com/yjmyzz/p/srs_study_1_install_push_and_pull_stream.html
+    ** 开源流媒体服务器srs simple rtmp（real time messaging protocol）
+    
     ** Java 学习网站
     ** https://how2j.cn
 
