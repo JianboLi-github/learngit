@@ -13,7 +13,7 @@ public class Item {
 
       final Item sword = new Item();
       sword.name = "长剑";
-      swrod.price = 350;
+      sword.price = 350;
       
       System.out.println();
     }

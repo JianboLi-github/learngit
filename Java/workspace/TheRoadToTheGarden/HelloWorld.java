@@ -37,6 +37,8 @@ public class HelloWorld {
         } else {
             System.out.println("重度肥胖，我觉得你还是可以拯救一下的！");
         }
+
+        s.close();
     }
 
     public static void main(String[] args) {
